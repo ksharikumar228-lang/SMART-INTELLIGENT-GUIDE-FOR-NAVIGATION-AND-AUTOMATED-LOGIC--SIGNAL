@@ -3,7 +3,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 // ==========================================
-// பகுதி 1: CORE SYSTEM
+// PART 1: CORE SYSTEM
 // ==========================================
 class SmartTrafficSensorSystem {
 
@@ -71,12 +71,12 @@ class SmartTrafficSensorSystem {
     private void triggerPedestrianCrossing() {
         System.out.println("\n*** PEDESTRIAN CROSSING ACTIVE ***");
         System.out.println(" [STP] TRAFFIC : ALL STOP");
-        System.out.println(" [🚶]  DISPLAY : WALK (15s)");
+        System.out.println(" [ ]  DISPLAY : WALK (15s)");
         
         // 15 Seconds Countdown for Walk
         try {
             for (int i = 15; i > 0; i--) {
-                System.out.print("\r [⏳]  WALK TIME LEFT: " + i + " seconds   "); 
+                System.out.print("\r [ ]  WALK TIME LEFT: " + i + " seconds   "); 
                 Thread.sleep(1000); 
             }
         } catch (InterruptedException e) {}
@@ -91,7 +91,7 @@ class SmartTrafficSensorSystem {
 }
 
 // ==========================================
-// பகுதி 2: MAIN WRAPPER
+// PART 2: MAIN WRAPPER
 // ==========================================
 public class Main {
 
@@ -105,7 +105,7 @@ public class Main {
 
         while (true) {
             System.out.println("\n=======================================================================");
-            System.out.println(" SMART INTELLIGENT GUIDE FOR NAVIGATION AND AUTOMATED LOGIC (SIGNAL 🚦)");
+            System.out.println(" SMART INTELLIGENT GUIDE FOR NAVIGATION AND AUTOMATED LOGIC (SIGNAL )");
             System.out.println("=======================================================================");
             System.out.println(" [1]   FIFO METHOD");
             System.out.println(" [2-4] MULTI DIRECTION");
@@ -131,7 +131,7 @@ public class Main {
     // ==========================================
     private static void runFifoLoop(BufferedReader reader, SmartTrafficSensorSystem core, Scanner scanner) throws Exception {
         
-        // --- HEADER SECTION (இத வெளியே கொண்டு வந்துட்டேன் - ஒரு முறை தான் வரும்) ---
+        // --- HEADER SECTION (I brought this out - it only comes once.) ---
         System.out.println("\n SMART INTELLIGENT GUIDE FOR NAVIGATION AND AUTOMATED LOGIC (SIGNAL 🚦)");
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("     ---");
@@ -145,7 +145,7 @@ public class Main {
 
         // --- LOOP START ---
         while (true) {
-            // உள்ளே வெறும் INPUT மட்டும் கேட்கும்
+            // It only asks for INPUT inside.
             System.out.print("\n SENSOR INPUT >> ");
 
             String input = reader.readLine().trim().toUpperCase();
@@ -167,7 +167,7 @@ public class Main {
                 System.out.println(" ACTIVE ROAD: " + input);
                 System.out.println("-----------------------------------------------------------------------");
                 
-                // இங்கு மட்டும் தான் வண்டி கணக்கு கேட்கும்
+                // Only here will the taxi bill be asked.
                 int vehicleCount = getVehicleCountWithTimer(reader);
                 runReverseSignalTimer(input, vehicleCount);
             }
@@ -175,7 +175,7 @@ public class Main {
     }
 
     // ==========================================
-    // MULTI DIRECTION (Automatic - பழைய முறை)
+    // MULTI DIRECTION (Automatic - Old fashioned)
     // ==========================================
     private static void runMultiDirection(BufferedReader reader, SmartTrafficSensorSystem core, int roadCount) throws Exception {
         Set<String> activeRoads = new HashSet<>();
