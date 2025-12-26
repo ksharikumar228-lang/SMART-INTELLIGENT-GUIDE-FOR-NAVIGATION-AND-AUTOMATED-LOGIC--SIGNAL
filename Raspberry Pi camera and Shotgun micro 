@@ -1,0 +1,154 @@
+import java.util.Scanner;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
+// Sensor 3:  name :HybridSensor;
+public class HybridSensorAccidentPerfectSystem { 
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // ==========================================
+        // 1. SYSTEM HEADER (NO TOP GAP)
+        // ==========================================
+        // மேலே இருந்த \n\n நீக்கப்பட்டது.
+        System.out.println("=========================================");
+        // மாற்றப்பட்டது: HYBRID SENSOR என்று பெயர் மாற்றப்பட்டுள்ளது
+        System.out.println("   TRAFFIC SENSOR AUTOMATION - HYBRID SENSOR SAFETY SHIELD");
+        System.out.println("=========================================");
+        System.out.println("   Zone     : TENKASI MAIN JUNCTION (Black Spot)");
+        System.out.println("   Timezone : TENKASI/TAMIL NADU (IST)");
+        System.out.println("=========================================");
+        // ---------------------------------------------------------
+        // 2. SENSOR INPUTS
+        // ---------------------------------------------------------
+        System.out.println("\n--- [ SENSOR DATA VERIFICATION ] ---");
+        
+        // Q1: Visual
+        System.out.print("[STEP 1] Camera/Visual - Collision Detected? (yes/no): ");
+        String visualInput = scanner.nextLine().trim().toLowerCase();
+        boolean isVisualDetected = visualInput.equals("yes");
+        // Q2: Vibration
+        System.out.print("[STEP 2] Vibration/Sound - High Impact? (yes/no): ");
+        String vibrationInput = scanner.nextLine().trim().toLowerCase();
+        boolean isVibrationDetected = vibrationInput.equals("yes");
+        // ---------------------------------------------------------
+        // 3. FAULT INPUT (BETTER ALIGNMENT)
+        // ---------------------------------------------------------
+        if (isVisualDetected && isVibrationDetected) {
+            
+            System.out.println("\n[SYSTEM] Accident Confirmed. Analyzing Trajectory...");
+            
+            String bikeNumber = "TN 76 BK XXXX"; 
+            String carNumber  = "TN 76 CR XXXX";
+            
+            // --- NEW ALIGNMENT STYLE ---
+            System.out.println("-----------------------------------------"); 
+            System.out.println(" [DECISION REQUIRED] IDENTIFY VEHICLE AT FAULT");
+            System.out.println("-----------------------------------------");
+            System.out.println(" Based on the sensor footage, select the violator:");
+            System.out.println();
+            // தெளிவான வரிசை (List Format)
+            System.out.println("   [1] BiKe : " + bikeNumber);
+            System.out.println("   [2] Car  : " + carNumber);
+            System.out.println();
+            System.out.print(" >> Enter Option (1 or 2): ");
+            
+            String choice = scanner.nextLine().trim();
+            
+            // பதிலை வைத்து ரிப்போர்ட் தயார் செய்தல்
+            generateDetailedReports(choice, bikeNumber, carNumber);
+            
+        } 
+        else if (isVisualDetected || isVibrationDetected) {
+            System.out.println("\n[FALSE ALARM] Sensor Mismatch. System Reset.");
+        } 
+        else {
+            System.out.println("\n[STATUS] Normal Traffic Flow.");
+        }
+        
+        scanner.close();
+    }
+    // ==========================================
+    // REPORT GENERATION ENGINE
+    // ==========================================
+    public static void generateDetailedReports(String choice, String bikeNum, String carNum) {
+        
+        // Time Setup
+        ZoneId indiaZone = ZoneId.of("Asia/Kolkata");
+        ZonedDateTime indiaTime = ZonedDateTime.now(indiaZone);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy | hh:mm:ss a");
+        String exactCrashTime = indiaTime.format(dtf);
+        
+        String location = "Tenkasi Main Singnal (SH-40)";
+        String hospitalName = "Government District Head Quarter Hospital, TENKASI - 627818";
+        
+        String primaryFault = "";
+        String mechanismOfInjury = ""; 
+        String policeNarrative = "";
+        if (choice.equals("1")) {
+            primaryFault = "Two-Wheeler (" + bikeNum + ")";
+            mechanismOfInjury = "High-speed collision. Rider likely thrown off bike. Potential head/limb trauma.";
+            policeNarrative = "The Two-Wheeler (" + bikeNum + ") violated the red signal at high speed and collided with the Four-Wheeler (" + carNum + ") which had the right of way. The impact caused significant damage to the front of the car.";
+        } else {
+            primaryFault = "Four-Wheeler (" + carNum + ")";
+            mechanismOfInjury = "Rear-end collision by heavy vehicle. Whiplash risk for car driver, blunt force trauma for bike rider.";
+            policeNarrative = "The Four-Wheeler (" + carNum + ") failed to maintain safe braking distance and rammed into the Two-Wheeler (" + bikeNum + ") from behind. The trajectory analysis indicates the car was over-speeding.";
+        }
+        // ==========================================
+        // REPORT 1: DETAILED HOSPITAL ALERT
+        // ==========================================
+        System.out.println("\n\n");
+        System.out.println(" >>> GENERATING EMERGENCY MEDICAL REPORT...");
+        try { Thread.sleep(1000); } catch (Exception e) {}
+        System.out.println("\n==========================================================");
+        System.out.println("   EMERGENCY MEDICAL SERVICE (EMS) - TRAUMA ALERT");
+        System.out.println("==========================================================");
+        System.out.println(" TO HOSPITAL      : " + hospitalName);
+        System.out.println(" PRIORITY CODE    : CODE RED (Immediate Response Req)");
+        System.out.println(" TIME OF INCIDENT : " + exactCrashTime);
+        System.out.println(" LOCATION         : " + location);
+        System.out.println("----------------------------------------------------------");
+        System.out.println(" PATIENT / VICTIM DETAILS (ESTIMATED):");
+        System.out.println(" * Vehicle 1 : Bike (" + bikeNum + ") - Rider Exposure: HIGH");
+        System.out.println(" * Vehicle 2 : Car  (" + carNum + ") - Driver Exposure: MODERATE");
+        System.out.println("----------------------------------------------------------");
+        System.out.println(" MECHANISM OF INJURY (FOR DOCTORS):");
+        System.out.println("   >> " + mechanismOfInjury);
+        System.out.println("----------------------------------------------------------");
+        System.out.println(" SYSTEM ACTION:");
+        System.out.println("   [✓] Ambulance 108 Dispatched.");
+        System.out.println("   [✓] GPS Coordinates Sent to ER Dashboard.");
+        System.out.println("==================================================================================\n");
+        // ==========================================
+        // REPORT 2: OFFICIAL POLICE REPORT
+        // ==========================================
+        System.out.println(" >>> TRANSMITTING REPORT TO POLICE STATION...");
+        try { Thread.sleep(1500); } catch (Exception e) {}
+        System.out.println("\n==================================================================================");
+        System.out.println("                     TAMIL NADU POLICE DEPARTMENT");
+        System.out.println("                   TRAFFIC ACCIDENT REPORT (E-FIR COPY)");
+        System.out.println("==================================================================================");
+        System.out.println("     TO        : THE INSPECTOR OF POLICE, TENKASI TOWN TRAFFIC STATION.");
+        System.out.println(" REPORT ID     : TN-TSI-AUTO-2025-001");
+        System.out.println(" DATE & TIME   : " + exactCrashTime);
+        System.out.println(" INCIDENT SPOT : " + location);
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println(" VEHICLES INVOLVED:");
+        System.out.println("   [A] Two-Wheeler : " + bikeNum);
+        System.out.println("   [B] Four-Wheeler: " + carNum);
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println(" STATEMENT OF INCIDENT (NARRATIVE):");
+        System.out.println("\n   " + policeNarrative);
+        System.out.println("\n   Based on digital sensor logs (Visual + Vibration), the primary cause of the");
+        System.out.println("   accident is attributed to the negligence of the " + primaryFault + ".");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println(" STATUS:");
+        System.out.println("   1. Medical team alerted via EMS Protocol.");
+        System.out.println("   2. Digital Evidence locked for investigation.");
+        System.out.println("==================================================================================");
+        System.out.println("                                               (DIGITALLY SIGNED)");
+        System.out.println("                                               AI TRAFFIC CONTROLLER");
+        System.out.println("==================================================================================\n");
+    }
+}
