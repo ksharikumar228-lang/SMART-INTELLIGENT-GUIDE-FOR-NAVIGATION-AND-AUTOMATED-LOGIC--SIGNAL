@@ -1,121 +1,138 @@
-Creative Commons Legal Code
+#python_code
 
-CC0 1.0 Universal
+import time
+def smart_traffic_system():
+    while True:
+        print("\n" + "="*60)
+        print(" 🚦  SMART TRAFFIC AUTOMATION (EASY MODE)  🚦 ")
+        print("="*60)
+        
+        # --- STEP 1: கேமரா தேர்வு ---
+        print("\n[STEP 1]: 📸 SELECT CAMERA")
+        print("   [1] Camera-1 (West & North)")
+        print("   [2] Camera-2 (East & South)")
+        
+        cam_input = input("   👉 Press [1] or [2]: ")
+        
+        # கேமரா செட் செய்தல்
+        if cam_input == '1':
+            camera_name = "Camera-1"
+            # இங்கே 1 மற்றும் 2 என எளிமையாக மாற்றப்பட்டுள்ளது
+            dir_options = {
+                '1': "West (மேற்கு)",
+                '2': "North (வடக்கு)"
+            }
+        elif cam_input == '2':
+            camera_name = "Camera-2"
+            # இங்கேயும் 1 மற்றும் 2 மட்டுமே வரும்
+            dir_options = {
+                '1': "East (கிழக்கு)",
+                '2': "South (தெற்கு)"
+            }
+        else:
+            print("   ❌ Wrong Input! Press 1 or 2.")
+            continue
 
-    CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE
-    LEGAL SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN
-    ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS
-    INFORMATION ON AN "AS-IS" BASIS. CREATIVE COMMONS MAKES NO WARRANTIES
-    REGARDING THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS
-    PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM
-    THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED
-    HEREUNDER.
+        print(f"\n   🔄 {camera_name} Active... Scanning... 🔍")
+        time.sleep(1)
 
-Statement of Purpose
+        # --- STEP 2: திசை தேர்வு (EASY INPUT) ---
+        print(f"\n[STEP 2]: 🧭 SELECT DIRECTION")
+        
+        # ஆப்ஷன்களை காட்டுதல்
+        for key, value in dir_options.items():
+            print(f"   [{key}] {value}")
+            
+        dir_choice = input("   👉 Press [1] or [2]: ")
+        
+        if dir_choice in dir_options:
+            selected_route = dir_options[dir_choice]
+            
+            # 🚦 SIGNAL DISPLAY
+            print("\n" + "-"*40)
+            print(f"   🟢 GO   : {selected_route} 🏃")
+            print(f"   🔴 STOP : Other Roads ✋")
+            print("-" * 40)
+        else:
+            print("   ❌ Invalid Direction!")
+            continue
 
-The laws of most jurisdictions throughout the world automatically confer
-exclusive Copyright and Related Rights (defined below) upon the creator
-and subsequent owner(s) (each and all, an "owner") of an original work of
-authorship and/or a database (each, a "Work").
+        # --- STEP 3: வாகன வகை (LOGICAL NUMBERS) ---
+        print("\n[STEP 3]: 🚛 VEHICLE TYPE (Press Wheel Count)")
+        
+        # நீங்கள் கேட்டபடியே சக்கரங்களின் எண்ணிக்கையை கீ (Key) ஆக வைத்துள்ளேன்
+        vehicle_db = {
+            "2": { "cat": "Two-Wheeler", "list": {"1": "Motorcycle", "2": "Scooter", "3": "Sports Bike"} },
+            "3": { "cat": "Three-Wheeler", "list": {"1": "Auto Rickshaw", "2": "E-Auto", "3": "Goods Auto"} },
+            "4": { "cat": "Four-Wheeler", "list": {"1": "Car", "2": "SUV", "3": "Taxi", "4": "Van"} },
+            "6": { "cat": "Heavy Vehicle", "list": {"1": "Bus", "2": "Lorry", "3": "Tanker"} },
+            "9": { "cat": "EMERGENCY", "list": {"1": "Ambulance 🚑", "2": "Fire Engine 🚒", "3": "Police 🚓"} },
+            "0": { "cat": "FUTURE (2030)", "list": {"1": "Flying Taxi 🚁", "2": "Auto-Bus 🤖", "3": "Hyperloop 🚄"} }
+        }
 
-Certain owners wish to permanently relinquish those rights to a Work for
-the purpose of contributing to a commons of creative, cultural and
-scientific works ("Commons") that the public can reliably and without fear
-of later claims of infringement build upon, modify, incorporate in other
-works, reuse and redistribute as freely as possible in any form whatsoever
-and for any purposes, including without limitation commercial purposes.
-These owners may contribute to the Commons to promote the ideal of a free
-culture and the further production of creative, cultural and scientific
-works, or to gain reputation or greater distribution for their Work in
-part through the use and efforts of others.
+        # மெனு டிஸ்ப்ளே (Easy Menu)
+        print("   [2] Two-Wheeler   (இரு சக்கரம்)")
+        print("   [3] Three-Wheeler (மூன்று சக்கரம்)")
+        print("   [4] Four-Wheeler  (நான்கு சக்கரம்)")
+        print("   [6] Heavy Vehicle (கனரக வாகனம்)")
+        print("   [9] Emergency     (அவசர வாகனம்)")
+        print("   [0] Future Tech   (எதிர்கால வாகனம்)")
 
-For these and/or other purposes and motivations, and without any
-expectation of additional consideration or compensation, the person
-associating CC0 with a Work (the "Affirmer"), to the extent that he or she
-is an owner of Copyright and Related Rights in the Work, voluntarily
-elects to apply CC0 to the Work and publicly distribute the Work under its
-terms, with knowledge of his or her Copyright and Related Rights in the
-Work and the meaning and intended legal effect of CC0 on those rights.
+        cat_choice = input("   👉 Enter Number [2/3/4/6/9/0]: ")
 
-1. Copyright and Related Rights. A Work made available under CC0 may be
-protected by copyright and related or neighboring rights ("Copyright and
-Related Rights"). Copyright and Related Rights include, but are not
-limited to, the following:
+        if cat_choice in vehicle_db:
+            selected_data = vehicle_db[cat_choice]
+            print(f"\n   🔹 {selected_data['cat']} Selected.")
+            print("   Select Model:")
+            
+            for k, v in selected_data['list'].items():
+                print(f"      [{k}] {v}")
+                
+            model_choice = input("   👉 Select Option: ")
+            vehicle_name = selected_data['list'].get(model_choice, "Vehicle")
+        else:
+            vehicle_name = "Vehicle"
+            print("   ⚠️ Unknown Type. Selected generic Vehicle.")
 
-  i. the right to reproduce, adapt, distribute, perform, display,
-     communicate, and translate a Work;
- ii. moral rights retained by the original author(s) and/or performer(s);
-iii. publicity and privacy rights pertaining to a person's image or
-     likeness depicted in a Work;
- iv. rights protecting against unfair competition in regards to a Work,
-     subject to the limitations in paragraph 4(a), below;
-  v. rights protecting the extraction, dissemination, use and reuse of data
-     in a Work;
- vi. database rights (such as those arising under Directive 96/9/EC of the
-     European Parliament and of the Council of 11 March 1996 on the legal
-     protection of databases, and under any national implementation
-     thereof, including any amended or successor version of such
-     directive); and
-vii. other similar, equivalent or corresponding rights throughout the
-     world based on applicable law or treaty, and any national
-     implementations thereof.
+        # --- STEP 4: நிலை (STATUS) ---
+        print("\n[STEP 4]: 🏁 STATUS REPORT")
+        print("   [1] Success (சென்றுவிட்டது) ✅")
+        print("   [2] Stuck Middle (நடுவில் நிற்கிறது) ⚠️")
+        print("   [3] Blocking (வழிமறிப்பு) 🛑")
+        
+        status = input("   👉 Press [1], [2] or [3]: ")
+        
+        print("\n" + "*"*50)
+        print("           🤖 AI POLICE ACTION 🤖       ")
+        print("*"*50)
 
-2. Waiver. To the greatest extent permitted by, but not in contravention
-of, applicable law, Affirmer hereby overtly, fully, permanently,
-irrevocably and unconditionally waives, abandons, and surrenders all of
-Affirmer's Copyright and Related Rights and associated claims and causes
-of action, whether now known or unknown (including existing as well as
-future claims and causes of action), in the Work (i) in all territories
-worldwide, (ii) for the maximum duration provided by applicable law or
-treaty (including future time extensions), (iii) in any current or future
-medium and for any number of copies, and (iv) for any purpose whatsoever,
-including without limitation commercial, advertising or promotional
-purposes (the "Waiver"). Affirmer makes the Waiver for the benefit of each
-member of the public at large and to the detriment of Affirmer's heirs and
-successors, fully intending that such Waiver shall not be subject to
-revocation, rescission, cancellation, termination, or any other legal or
-equitable action to disrupt the quiet enjoyment of the Work by the public
-as contemplated by Affirmer's express Statement of Purpose.
+        if status == '1':
+            print(f"   ✅ {vehicle_name} Cleared the junction.")
+            print("   🟢 Traffic Flow Normal.")
 
-3. Public License Fallback. Should any part of the Waiver for any reason
-be judged legally invalid or ineffective under applicable law, then the
-Waiver shall be preserved to the maximum extent permitted taking into
-account Affirmer's express Statement of Purpose. In addition, to the
-extent the Waiver is so judged Affirmer hereby grants to each affected
-person a royalty-free, non transferable, non sublicensable, non exclusive,
-irrevocable and unconditional license to exercise Affirmer's Copyright and
-Related Rights in the Work (i) in all territories worldwide, (ii) for the
-maximum duration provided by applicable law or treaty (including future
-time extensions), (iii) in any current or future medium and for any number
-of copies, and (iv) for any purpose whatsoever, including without
-limitation commercial, advertising or promotional purposes (the
-"License"). The License shall be deemed effective as of the date CC0 was
-applied by Affirmer to the Work. Should any part of the License for any
-reason be judged legally invalid or ineffective under applicable law, such
-partial invalidity or ineffectiveness shall not invalidate the remainder
-of the License, and in such case Affirmer hereby affirms that he or she
-will not (i) exercise any of his or her remaining Copyright and Related
-Rights in the Work or (ii) assert any associated claims and causes of
-action with respect to the Work, in either case contrary to Affirmer's
-express Statement of Purpose.
+        elif status == '2':
+            # Stuck Middle Warning
+            print(f"   ⚠️ WARNING: {vehicle_name} Stuck in CENTER!")
+            print("\n   📢 [TAMIL ALERT]:")
+            print(f'      🗣️ "வணக்கம்! {vehicle_name} ஓட்டுநரே."')
+            print('      🗣️ "நீங்கள் சாலையின் மையப்பகுதியில் (Center) நிற்கிறீர்கள்."')
+            print('      🗣️ "சிக்னல் மாறுவதற்குள் விரைந்து செல்லவும்."')
+            
+        elif status == '3':
+            # Blocking Warning
+            print(f"   🛑 WARNING: {vehicle_name} is BLOCKING!")
+            print("\n   📢 [TAMIL ALERT]:")
+            print(f'      🗣️ "கவனிக்கவும்! {vehicle_name} ஓட்டுநரே."')
+            print('      🗣️ "நீங்கள் வழியை மறித்து மற்றவர்களுக்கு இடையூறாக நிற்கிறீர்கள்."')
+            print('      🗣️ "தயவுசெய்து வாகனத்தை ஓரமாக நகர்த்தவும்."')
+        
+        else:
+            print("   ❌ Invalid Status.")
 
-4. Limitations and Disclaimers.
+        print("="*60)
+        again = input("   🔄 Next Vehicle? (y/n): ")
+        if again.lower() != 'y':
+            break
 
- a. No trademark or patent rights held by Affirmer are waived, abandoned,
-    surrendered, licensed or otherwise affected by this document.
- b. Affirmer offers the Work as-is and makes no representations or
-    warranties of any kind concerning the Work, express, implied,
-    statutory or otherwise, including without limitation warranties of
-    title, merchantability, fitness for a particular purpose, non
-    infringement, or the absence of latent or other defects, accuracy, or
-    the present or absence of errors, whether or not discoverable, all to
-    the greatest extent permissible under applicable law.
- c. Affirmer disclaims responsibility for clearing rights of other persons
-    that may apply to the Work or any use thereof, including without
-    limitation any person's Copyright and Related Rights in the Work.
-    Further, Affirmer disclaims responsibility for obtaining any necessary
-    consents, permissions or other rights required for any use of the
-    Work.
- d. Affirmer understands and acknowledges that Creative Commons is not a
-    party to this document and has no duty or obligation with respect to
-    this CC0 or use of the Work.
+# Run Code
+smart_traffic_system()
