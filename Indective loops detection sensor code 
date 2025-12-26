@@ -1,0 +1,289 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+// ==========================================
+// PART 1: CORE SYSTEM
+// ==========================================
+class SmartTrafficSensorSystem {
+
+    public Queue<String> signalQueue = new LinkedList<>();
+    public Map<String, Integer> trafficLoad = new HashMap<>();
+    public final List<String> PRIORITY_LIST = Arrays.asList("NORTH", "EAST", "SOUTH", "WEST");
+    private final int TIME_PER_VEHICLE = 2; 
+
+    public SmartTrafficSensorSystem() {
+        for (String dir : PRIORITY_LIST) trafficLoad.put(dir, 0);
+    }
+
+    // FIFO INPUT PROCESSOR
+    public void processInput(String rawInput, Scanner scanner) {
+        rawInput = rawInput.toUpperCase().trim();
+
+        if (rawInput.equals("AMBULANCE") || rawInput.equals("FIRE")) {
+            System.out.print("   >> [?] MISSING LOCATION. WHICH DIRECTION? (NORTH/SOUTH/EAST/WEST): ");
+            String dir = scanner.nextLine().toUpperCase().trim();
+            rawInput = rawInput + " " + dir; 
+        }
+
+        if (rawInput.startsWith("AMBULANCE") || rawInput.startsWith("FIRE")) {
+            handleEmergency(rawInput);
+            return;
+        }
+        
+        if (rawInput.equals("WALK")) {
+            triggerPedestrianCrossing();
+            return;
+        }
+
+        // NORMAL TRAFFIC LOGIC (For internal processing)
+        String[] detectedRoads = rawInput.split(",");
+        for (String road : detectedRoads) {
+            road = road.trim();
+            if (isValidDirection(road)) {
+                trafficLoad.put(road, trafficLoad.get(road) + 5); 
+                System.out.println("   -> DETECTED: " + road);
+            }
+        }
+    }
+
+    private void handleEmergency(String input) {
+        String[] parts = input.split(" ");
+        String type = parts[0];
+        String direction = (parts.length > 1) ? parts[1] : "UNKNOWN";
+
+        if (isValidDirection(direction)) {
+            System.out.println("\n/!\\ CRITICAL ALERT: " + type + " DETECTED AT " + direction + " /!\\");
+            System.out.println("-------------------------------------------------------");
+            System.out.println(" >> ACTION : INITIATING EMERGENCY PREEMPTION PROTOCOL");
+            System.out.println(" [GO]  PRIORITY   : " + direction + " (CORRIDOR OPEN)");
+            
+            for(String dir : PRIORITY_LIST) {
+                if(!dir.equals(direction)) System.out.println(" [STP] FORCE STOP : " + dir + " (BLOCKED)");
+            }
+            System.out.println("-------------------------------------------------------");
+            System.out.println(" >> STATUS: Emergency Vehicle Passed.\n");
+        } else {
+            System.out.println("\n[ERR] INVALID DIRECTION!");
+        }
+    }
+
+    private void triggerPedestrianCrossing() {
+        System.out.println("\n*** PEDESTRIAN CROSSING ACTIVE ***");
+        System.out.println(" [STP] TRAFFIC : ALL STOP");
+        System.out.println(" [ ]  DISPLAY : WALK (15s)");
+        
+        // 15 Seconds Countdown for Walk
+        try {
+            for (int i = 15; i > 0; i--) {
+                System.out.print("\r [ ]  WALK TIME LEFT: " + i + " seconds   "); 
+                Thread.sleep(1000); 
+            }
+        } catch (InterruptedException e) {}
+        
+        System.out.println("\n [!]  DISPLAY : DON'T WALK");
+        System.out.println("**********************************\n");
+    }
+
+    public boolean isValidDirection(String input) {
+        return PRIORITY_LIST.contains(input);
+    }
+}
+
+// ==========================================
+// PART 2: MAIN WRAPPER
+// ==========================================
+public class Main {
+
+    private static final int BASE_TIME_100M = 12; 
+    private static final int TIME_PER_CAR = 3;    
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        Scanner scanner = new Scanner(System.in);
+        SmartTrafficSensorSystem core = new SmartTrafficSensorSystem(); 
+
+        while (true) {
+            System.out.println("\n=======================================================================");
+            System.out.println(" SMART INTELLIGENT GUIDE FOR NAVIGATION AND AUTOMATED LOGIC (SIGNAL )");
+            System.out.println("=======================================================================");
+            System.out.println(" [1]   FIFO METHOD");
+            System.out.println(" [2-4] MULTI DIRECTION");
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.print(" ENTER YOUR OPTION >> ");
+
+            String input = reader.readLine().trim().toUpperCase();
+            System.out.println("-----------------------------------------------------------------------");
+
+            if (input.equals("1")) {
+                runFifoLoop(reader, core, scanner);
+            } else if (input.matches("[2-4]")) {
+                int roads = Integer.parseInt(input);
+                runMultiDirection(reader, core, roads);
+            } else {
+                System.out.println(" [!] INVALID OPTION.");
+            }
+        }
+    }
+
+    // ==========================================
+    // FIFO METHOD (Interactive - CLEAN LOOP)
+    // ==========================================
+    private static void runFifoLoop(BufferedReader reader, SmartTrafficSensorSystem core, Scanner scanner) throws Exception {
+        
+        // --- HEADER SECTION (I brought this out - it only comes once.) ---
+        System.out.println("\n SMART INTELLIGENT GUIDE FOR NAVIGATION AND AUTOMATED LOGIC (SIGNAL 🚦)");
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("     ---");
+        System.out.println("     ? INDUCTIVE LOOP SENSOR (ILD) ?");
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("     ---");
+        System.out.println(" COMMANDS: NORTH, SOUTH, EAST, WEST");
+        System.out.println(" SPECIAL : WALK | FIRE | AMBULANCE");
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("     ---");
+
+        // --- LOOP START ---
+        while (true) {
+            // It only asks for INPUT inside.
+            System.out.print("\n SENSOR INPUT >> ");
+
+            String input = reader.readLine().trim().toUpperCase();
+
+            if (input.equals("EXIT") || input.equals("BACK")) {
+                break; 
+            }
+            if (input.isEmpty()) continue;
+
+            // Emergency / Walk Logic
+            if (input.startsWith("AMB") || input.startsWith("FIR") || input.equals("WALK")) {
+                core.processInput(input, scanner);
+                continue;
+            }
+
+            // FIFO Logic with USER INTERACTION
+            if (core.isValidDirection(input)) {
+                System.out.println("-----------------------------------------------------------------------");
+                System.out.println(" ACTIVE ROAD: " + input);
+                System.out.println("-----------------------------------------------------------------------");
+                
+                // Only here will the taxi bill be asked.
+                int vehicleCount = getVehicleCountWithTimer(reader);
+                runReverseSignalTimer(input, vehicleCount);
+            }
+        }
+    }
+
+    // ==========================================
+    // MULTI DIRECTION (Automatic - Old fashioned)
+    // ==========================================
+    private static void runMultiDirection(BufferedReader reader, SmartTrafficSensorSystem core, int roadCount) throws Exception {
+        Set<String> activeRoads = new HashSet<>();
+
+        // 1. Get Directions
+        for (int i = 1; i <= roadCount; i++) {
+            System.out.println("\n [INPUT] \nSelect Direction in Road " + i + " (N/E/S/W):");
+            System.out.print(" >> ");
+            String rawDir = reader.readLine().trim().toUpperCase();
+            
+            String dir = mapDirection(rawDir);
+            if (core.isValidDirection(dir)) {
+                activeRoads.add(dir);
+            } else {
+                System.out.println(" [!] Invalid Direction. Try N, E, S, W.");
+                i--;
+            }
+        }
+
+        System.out.println("\n [SYS] PRIORITY SEQUENCE APPLIED (W -> N -> E -> S).");
+        Thread.sleep(1000);
+
+        // 2. Roundabout Sequence (Automatic)
+        String[] sequence = {"WEST", "NORTH", "EAST", "SOUTH"};
+
+        for (String road : sequence) {
+            if (activeRoads.contains(road)) {
+                System.out.println("\n-----------------------------------------------------------------------");
+                System.out.println(" ACTIVE ROAD: " + road);
+                System.out.println("-----------------------------------------------------------------------");
+                
+                // Automatic Calculation (Ex: Assume 1 vehicle)
+                int autoCount = 1; 
+                runReverseSignalTimer(road, autoCount);
+            }
+        }
+        System.out.println("\n [SYS] ALL DIRECTIONS CLEARED.");
+    }
+
+    // ==========================================
+    // FIFO ONLY: 5-SECOND CHALLENGE
+    // ==========================================
+    private static int getVehicleCountWithTimer(BufferedReader reader) throws Exception {
+        int count = 1; 
+        System.out.println(" [DET] Vehicle 1 Detected automatically.");
+
+        for (int v = 2; v <= 5; v++) {
+            boolean added = false;
+            String requiredInput = String.valueOf(v); 
+            
+            System.out.println("\n [SENSING] Waiting for Vehicle " + v + "...");
+
+            for (int seconds = 5; seconds > 0; seconds--) {
+                System.out.print("\r [ TIME LEFT: " + seconds + "s ] Type '" + v + "' to add vehicle >>    ");
+                for(int i=0; i<10; i++) { 
+                    if (reader.ready()) {
+                        String line = reader.readLine().trim();
+                        if (line.equals(requiredInput)) {
+                            added = true;
+                            break;
+                        }
+                    }
+                    Thread.sleep(100); 
+                }
+                if(added) break; 
+            }
+
+            if (added) {
+                System.out.println("\n -> YES (Vehicle " + v + " Added)");
+                count++;
+            } else {
+                System.out.println("\n -> NO (Time Up / No Vehicle)");
+                break; 
+            }
+        }
+        return count;
+    }
+
+    // ==========================================
+    // REVERSE TIMER DISPLAY
+    // ==========================================
+    private static void runReverseSignalTimer(String road, int count) {
+        int totalTime = BASE_TIME_100M + (count * TIME_PER_CAR);
+        
+        System.out.println("\n +----------------------------------+");
+        System.out.println(" |          *** GO *** |");
+        System.out.println(" |        (GREEN SIGNAL)            |");
+        System.out.println(" +----------------------------------+");
+        System.out.println("   TARGET: " + road);
+        System.out.println("   TOTAL TIME: " + totalTime + "s");
+
+        for (int t = totalTime; t >= 0; t--) {
+            String status = (t == 0) ? " -> [C] CLOSE" : "";
+            System.out.print("\r | TIMER: " + String.format("%02d", t) + "s | " + status);
+            try { Thread.sleep(1000); } catch (Exception e) {}
+        }
+
+        System.out.println("\n\n +----------------------------------+");
+        System.out.println(" |         ### STOP ###             |");
+        System.out.println(" |         (RED SIGNAL)             |");
+        System.out.println(" +----------------------------------+");
+    }
+
+    private static String mapDirection(String input) {
+        if (input.startsWith("N")) return "NORTH";
+        if (input.startsWith("E")) return "EAST";
+        if (input.startsWith("S")) return "SOUTH";
+        if (input.startsWith("W")) return "WEST";
+        return "UNKNOWN";
+    }
+}
