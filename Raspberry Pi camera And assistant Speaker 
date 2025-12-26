@@ -1,0 +1,270 @@
+#python
+import time
+
+class SmartTrafficAssistant:
+
+    def __init__(self):
+        # ==========================================
+        # 1. வாகனத் தரவுத்தளம் (DATASET)
+        # ==========================================
+        self.vehicle_data = {
+            "1": {
+                "Title": "CYCLES (மிதிவண்டிகள்)",
+                "List": ["Bicycle (Ordinary)", "Sports Cycle", "Kids Cycle", "Tri-cycle"]
+            },
+            "2": {
+                "Title": "TWO WHEELERS (இரு சக்கர வாகனங்கள்)",
+                "List": ["Motorcycle", "Scooter", "Sports Bike", "Cruiser Bike", "e-Bike", "Moped"]
+            },
+            "3": {
+                "Title": "THREE WHEELERS (மூன்று சக்கர வாகனங்கள்)",
+                "List": ["Auto Rickshaw", "Share Auto", "Goods Auto", "e-Auto"]
+            },
+            "4": {
+                "Title": "LIGHT VEHICLES (நான்கு சக்கர வாகனங்கள்)",
+                "List": ["Car (Sedan/SUV)", "Taxi", "Jeep", "Police Van", "Ambulance", "Fire Engine", "School Van"]
+            },
+            "6": {
+                "Title": "HEAVY VEHICLES (கனரக வாகனங்கள்)",
+                "List": ["Government Bus", "Private Bus", "Lorry", "Container Truck", "Tanker", "Cement Mixer"]
+            },
+            "S": {
+                "Title": "SPECIAL / CONSTRUCTION (சிறப்பு வாகனங்கள்)",
+                "List": ["Road Roller", "JCB (Excavator)", "Bulldozer", "Crane", "Tractor", "Forklift"]
+            },
+            "A": {
+                "Title": "ANIMALS ON ROAD (விலங்குகள்/கால்நடைகள்)",
+                "List": ["Dog (நாய்)", "Cow/Cattle (மாடு)", "Goat (ஆடு)", "Buffalo (எருமை)", "Horse (குதிரை)", "Wild Animal (வன விலங்கு)"]
+            }
+        }
+
+        # Settings க்கான தனி பட்டியல் (Road Conditions)
+        self.road_conditions = [
+            {
+                "msg": "Caution: Cattle crossing. (எச்சரிக்கை: கால்நடைகள் நடமாட்டம் உள்ளது.)",
+                "action": "📉 SLOW DOWN. Look out for unexpected movement.",
+                "icon": "🐄"
+            },
+            {
+                "msg": "Caution: Slippery road ahead. (கவனம்: சாலை வழுக்கும் நிலையில் உள்ளது.)",
+                "action": "⚠️ DRIVE CAREFULLY. Maintain Grip.",
+                "icon": "🌧️"
+            },
+            {
+                "msg": "Slow down: School zone. (வேகத்தை குறைக்கவும்: பள்ளிக்கூடம் அருகில் உள்ளது.)",
+                "action": "🚸 MAX SPEED 20KM/H. Watch for Kids.",
+                "icon": "🎒"
+            },
+            {
+                "msg": "Caution: Speed breaker ahead. (கவனம்: முன்புறம் வேகத்தடை உள்ளது.)",
+                "action": "🛑 REDUCE SPEED IMMEDIATELY. Bump Ahead.",
+                "icon": "🚧"
+            },
+            {
+                "msg": "Work in Progress: Men at work. (சாலை வேலை நடைபெறுகிறது.)",
+                "action": "👷 DIVERSION AHEAD. Keep Left/Right.",
+                "icon": "🔨"
+            },
+            {
+                "msg": "Accident Prone Area / Spot. (விபத்து நடக்கும் பகுதி.)",
+                "action": "🚨 HIGH ALERT. Do not Overtake.",
+                "icon": "☠️"
+            }
+        ]
+
+        self.direction_map = {
+            "NORTH": "வடக்கு",
+            "SOUTH": "தெற்கு",
+            "EAST": "கிழக்கு",
+            "WEST": "மேற்கு"
+        }
+
+    # ==========================================
+    # 2. MAIN LOGIC (INPUT SECTION)
+    # ==========================================
+    def start_system(self):
+        print("\n\n")
+        print("  👮 AI TRAFFIC POLICE ASSISTANT V2.0 👮  ")
+        print("============================================")
+
+        # --- STEP 1: MAIN MENU ---
+        print("\n[STEP 1] உள்ளீட்டு வகையைத் தேர்ந்தெடுக்கவும்:")
+        print(" " + "-"*50)
+        print("   [1]  Cycles         (மிதிவண்டிகள்)")
+        print("   [2]  Two Wheelers   (இரு சக்கர வாகனங்கள்)")
+        print("   [3]  Three Wheelers (மூன்று சக்கர வாகனங்கள்)")
+        print("   [4]  Light Vehicles (நான்கு சக்கர வாகனங்கள்)")
+        print("   [6]  Heavy Vehicles (கனரக வாகனங்கள்)")
+        print("   [S]  Special Equip  (சிறப்பு வாகனங்கள்)")
+        print("   [A]  Animals        (விலங்குகள்/கால்நடைகள்) 🐕")
+        print(" " + "."*50)
+        print("   [9]  ⚙️ SETTINGS / ROAD ALERTS (சாலை எச்சரிக்கைகள்)") 
+        print(" " + "-"*50)
+        
+        main_input = input("\n👉 Enter Code: ").strip().upper()
+
+        # --- CASE A: SETTINGS / ROAD CONDITIONS ---
+        if main_input == "9":
+            self.handle_road_settings()
+            return
+
+        # --- CASE B: VEHICLES & ANIMALS ---
+        if main_input not in self.vehicle_data:
+            print("\n❌ Error: தவறான தேர்வு! (Invalid Code)")
+            return
+
+        # --- STEP 2: OBJECT SELECTION ---
+        cat_info = self.vehicle_data[main_input]
+        print(f"\n[STEP 2] {cat_info['Title']} பட்டியல்:")
+        print("-" * 50)
+        
+        v_list = cat_info['List']
+        for idx, vehicle in enumerate(v_list, 1):
+            print(f"   [{idx}] {vehicle}")  
+        print("-" * 50)
+
+        try:
+            v_choice = int(input(f"\n👉 Select Number (1-{len(v_list)}): "))
+            if 1 <= v_choice <= len(v_list):
+                sel_object = v_list[v_choice - 1]
+            else:
+                print("\n❌ Error: தவறான எண்!")
+                return
+        except ValueError:
+            print("\n❌ Error: எண்களை மட்டும் உள்ளிடவும்!")
+            return
+
+        # --- STEP 3: DIRECTION ---
+        print("\n[STEP 3] வரும் திசை:")
+        print("-" * 30)
+        dir_keys = ["NORTH", "SOUTH", "EAST", "WEST"]
+        for idx, d in enumerate(dir_keys, 1):
+            print(f"   [{idx}] {d}")
+        print("-" * 30)
+        
+        try:
+            d_choice = int(input("\n👉 Select Direction (1-4): "))
+            if 1 <= d_choice <= 4:
+                direction = dir_keys[d_choice - 1]
+            else:
+                print("\n❌ Error: தவறான எண்!")
+                return
+        except ValueError:
+            print("\n❌ Error: எண் தேவை!")
+            return
+
+        # --- FINAL OUTPUT ---
+        self.display_traffic_card(sel_object, direction, category_code=main_input)
+
+    # ==========================================
+    # 3. SETTINGS / ROAD CONDITIONS HANDLER
+    # ==========================================
+    def handle_road_settings(self):
+        print("\n\n")
+        print("  ⚠️  ROAD CONDITION SETTINGS (சாலை எச்சரிக்கைகள்)  ⚠️")
+        print("======================================================")
+        
+        for i, cond in enumerate(self.road_conditions, 1):
+            print(f"   ★ [{i}] {cond['msg']}")
+        
+        print("\n" + "-"*54)
+        
+        try:
+            c_choice = int(input("👉 Select Condition to Broadcast (1-6): "))
+            if 1 <= c_choice <= len(self.road_conditions):
+                selected_condition = self.road_conditions[c_choice - 1]
+                
+                print("\n\n")
+                print(" " + "▓"*50 + " ")
+                print(f"   📢  BROADCAST ALERT SYSTEM ACTIVATED ")
+                print(" " + "▓"*50 + " ")
+                print(f"\n  {selected_condition['icon']}  WARNING / எச்சரிக்கை:")
+                print(f"      \"{selected_condition['msg']}\"")
+                print("\n  🛡️  POLICE INSTRUCTION:")
+                print(f"      {selected_condition['action']}")
+                print(" " + "_"*50 + " ")
+                print("\n")
+                
+            else:
+                print("\n❌ Error: Invalid Selection.")
+        except ValueError:
+            print("\n❌ Error: Numbers only.")
+
+    # ==========================================
+    # 4. TRAFFIC CARD DISPLAY (VEHICLES/ANIMALS)
+    # ==========================================
+    def display_traffic_card(self, obj_name, coming_dir, category_code):
+        
+        tamil_dir = self.direction_map[coming_dir]
+        
+        # Variables
+        alert_title = ""
+        msg_tamil = ""
+        msg_action = ""
+        symbol = ""
+        
+        # A. ANIMALS LOGIC
+        if category_code == "A":
+            symbol = "🐕" if "Dog" in obj_name else "🐄"
+            alert_title = "ANIMAL CROSSING ALERT"
+            msg_tamil = f"'{tamil_dir}' திசையிலிருந்து {obj_name} சாலையில் வருகிறது/குறுக்கிடுகிறது. உடனே கவனிக்கவும்!"
+            msg_action = "📉 SLOW DOWN. Do not honk loudly (விலங்கை மிரட்ட வேண்டாம்)."
+
+        # B. CYCLES LOGIC
+        elif category_code == "1":
+            symbol = "🚲"
+            alert_title = "CYCLIST AHEAD"
+            msg_tamil = f"'{tamil_dir}' திசையிலிருந்து மிதிவண்டி ({obj_name}) வருகிறது. இடைவெளி விட்டு செல்லவும்."
+            msg_action = "↔️ KEEP SAFE DISTANCE."
+
+        # C. EMERGENCY LOGIC
+        elif any(k in obj_name.lower() for k in ["ambulance", "fire", "police"]):
+            symbol = "🚨"
+            alert_title = "EMERGENCY / அவசர வாகனம்"
+            msg_tamil = f"'{tamil_dir}' திசையிலிருந்து அவசர வாகனம் ({obj_name}) வருகிறது! வழிவிடவும்!"
+            msg_action = "🛑 STOP ALL TRAFFIC. Clear Path."
+
+        # D. HEAVY VEHICLE LOGIC
+        elif any(k in obj_name.lower() for k in ["bus", "lorry", "truck", "jcb", "roller"]):
+            symbol = "🚛"
+            alert_title = "HEAVY VEHICLE / கனரக வாகனம்"
+            msg_tamil = f"'{tamil_dir}' திசையிலிருந்து பெரிய வாகனம் ({obj_name}) வருகிறது."
+            msg_action = "⚠️ YIELD WAY. Watch Blind Spots."
+
+        # E. SCHOOL VAN LOGIC
+        elif "school" in obj_name.lower():
+            symbol = "🚸"
+            alert_title = "SCHOOL TRANSPORT"
+            msg_tamil = f"'{tamil_dir}' திசையிலிருந்து பள்ளி வாகனம் வருகிறது. குழந்தைகள் இருப்பார்கள், கவனம்."
+            msg_action = "📉 REDUCE SPEED."
+
+        # F. STANDARD LOGIC
+        else:
+            symbol = "🚗"
+            alert_title = "VEHICLE DETECTED"
+            msg_tamil = f"'{tamil_dir}' திசையிலிருந்து {obj_name} வருகிறது."
+            msg_action = "✅ PROCEED WITH CAUTION."
+
+        # --- PRINTING THE CARD ---
+        print("\n\n")
+        print(" " + "_"*52 + " ")
+        print(f"|  {symbol} {alert_title.center(46)}  |")
+        print(" " + "="*52 + " ")
+        print(f"  🔍 OBJECT DETECTED  : {obj_name}")
+        print(f"  📍 COMING FROM      : {coming_dir} ({tamil_dir})")
+        print(" " + "-"*52 + " ")
+        print(f"  🔊 VOICE ANNOUNCEMENT (தமிழ்):")
+        print(f"     \"{msg_tamil}\"")
+        print(" " + "-"*52 + " ")
+        print(f"  👮 POLICE AI ACTION:")
+        print(f"     {msg_action}")
+        print(" " + "_"*52 + " ")
+        print("\n")
+
+if __name__ == "__main__":
+    system = SmartTrafficAssistant()
+    while True:
+        system.start_system()
+        chk = input("Press ENTER to Scan Next (or type 'exit'): ").lower()
+        if chk == 'exit':
+            break
